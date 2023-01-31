@@ -71,7 +71,6 @@ export default function Home() {
                 const cardJSON: string = el?.value;
                 try {
                   const cardObject = JSON.parse(cardJSON);
-                  setCardType(cardObject.type);
                   addStat("cardName", cardObject.name);
                   addStat("level", "*".repeat(cardObject.level));
                   addStat("atk", cardObject.atk);
@@ -131,7 +130,6 @@ export default function Home() {
                 const response = await fetch(url);
                 const cardObject = await response.json();
                 try {
-                  setCardType(cardObject.data[0].type);
                   addStat("cardName", cardObject.data[0].name);
                   addStat("level", "*".repeat(cardObject.data[0].level));
                   addStat("atk", cardObject.data[0].atk);
