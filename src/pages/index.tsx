@@ -72,7 +72,6 @@ export default function Home() {
                 try {
                   const cardObject = JSON.parse(cardJSON);
                   setCardType(cardObject.type);
-                  alert(cardType);
                   addStat("cardName", cardObject.name);
                   addStat("level", "*".repeat(cardObject.level));
                   addStat("atk", cardObject.atk);
@@ -92,7 +91,7 @@ export default function Home() {
                   }
                   el.value = JSON.stringify(cardObject, null, 2);
                 } catch (e) {
-                  alert(cardJSON);
+                  alert(e);
                 }
               }}
               className="w-full font-bold text-white bg-blue-500 rounded font-aldrich hover:bg-blue-700"
@@ -104,7 +103,7 @@ export default function Home() {
           <form className="space-y-4">
             <h2 className="text-3xl">Card Generator</h2>
             <label htmlFor="cardID" className="block font-aldrich">
-              ID
+              Name
             </label>
             <input id="cardID" className="w-full px-4 py-2 rounded-md" />
             <button
@@ -123,7 +122,6 @@ export default function Home() {
               }}
               onClick={async (e) => {
                 e.preventDefault();
-                // get card info from https://db.ygoprodeck.com/api/v7/cardinfo.php as JSON
                 const el = document.getElementById(
                   "cardID"
                 ) as HTMLInputElement;
@@ -134,7 +132,6 @@ export default function Home() {
                 const cardObject = await response.json();
                 try {
                   setCardType(cardObject.data[0].type);
-                  alert(cardType);
                   addStat("cardName", cardObject.data[0].name);
                   addStat("level", "*".repeat(cardObject.data[0].level));
                   addStat("atk", cardObject.data[0].atk);
