@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useState } from "react";
+import { JsonObjectExpression } from "typescript";
 
 const addStat = (el: string, stat: string) => {
   const element = document.getElementById(el);
@@ -15,8 +16,32 @@ const isMonster = (type: string) => {
   return type != "Spell Card" && type != "Trap Card";
 };
 
+const addMonsterStats = (cardObject: any) => {
+  const JSONField = document.getElementById("cardJSON") as HTMLTextAreaElement;
+  const NameField = document.getElementById("cardName") as HTMLInputElement;
+  addStat("cardName", cardObject.name);
+  addStat("level", "*".repeat(cardObject.level));
+  addStat("atk", cardObject.atk);
+  addStat("def", cardObject.def);
+  addStat("desc", cardObject.desc);
+  addStat("race", cardObject.race);
+  addStat("attr", cardObject.attribute);
+  addStat("cardType", cardObject.type);
+  if (cardObject.archetype !== undefined) {
+    addStat("archetype", cardObject.archetype + " Archetype");
+  } else {
+    addStat("archetype", "");
+  }
+  const cardImage = document.querySelector("img");
+  if (cardImage !== null) {
+    cardImage.src = cardObject.card_images[0].image_url;
+  }
+  JSONField.value = JSON.stringify(cardObject, null, 2);
+  NameField.value = cardObject.name;
+};
+
 export default function Home() {
-  const [cardType, setCardType] = useState("Spell Card");
+  const [cardType, setCardType] = useState("");
   return (
     <>
       <Head>
@@ -68,26 +93,10 @@ export default function Home() {
                   "cardJSON"
                 ) as HTMLTextAreaElement;
                 const cardJSON: string = el?.value;
+                const cardObject = JSON.parse(cardJSON);
+                setCardType(cardObject.type);
                 try {
-                  const cardObject = JSON.parse(cardJSON);
-                  addStat("cardName", cardObject.name);
-                  addStat("level", "*".repeat(cardObject.level));
-                  addStat("atk", cardObject.atk);
-                  addStat("def", cardObject.def);
-                  addStat("desc", cardObject.desc);
-                  addStat("race", cardObject.race);
-                  addStat("attr", cardObject.attribute);
-                  addStat("cardType", cardObject.type);
-                  if (cardObject.archetype !== undefined) {
-                    addStat("archetype", cardObject.archetype + " Archetype");
-                  } else {
-                    addStat("archetype", "");
-                  }
-                  const cardImage = document.querySelector("img");
-                  if (cardImage !== null) {
-                    cardImage.src = cardObject.card_images[0].image_url;
-                  }
-                  el.value = JSON.stringify(cardObject, null, 2);
+                  addMonsterStats(cardObject);
                 } catch (e) {
                   alert(e);
                 }
@@ -132,30 +141,7 @@ export default function Home() {
                 const response = await fetch(url);
                 const cardObject = await response.json();
                 try {
-                  addStat("cardName", cardObject.data[0].name);
-                  addStat("level", "*".repeat(cardObject.data[0].level));
-                  addStat("atk", cardObject.data[0].atk);
-                  addStat("def", cardObject.data[0].def);
-                  addStat("desc", cardObject.data[0].desc);
-                  addStat("race", cardObject.data[0].race);
-                  addStat("attr", cardObject.data[0].attribute);
-                  addStat("cardType", cardObject.data[0].type);
-                  if (cardObject.data[0].archetype !== undefined) {
-                    addStat(
-                      "archetype",
-                      cardObject.data[0].archetype + " Archetype"
-                    );
-                  } else {
-                    addStat("archetype", "");
-                  }
-                  const cardImage = document.querySelector("img");
-                  if (cardImage !== null) {
-                    cardImage.src = cardObject.data[0].card_images[0].image_url;
-                  }
-                  const el2 = document.getElementById(
-                    "cardJSON"
-                  ) as HTMLTextAreaElement;
-                  el2.value = JSON.stringify(cardObject.data[0], null, 2);
+                  addMonsterStats(cardObject.data[0]);
                 } catch (e) {
                   alert(e);
                 }
@@ -167,7 +153,7 @@ export default function Home() {
           </form>
         </div>
         <div className="section">
-          <div className="flex space-x-8">
+          <div className={`flex space-x-8 ${cardType === "" && "hidden"}`}>
             <div className="flex-1 space-y-4">
               <h1 id="cardName"></h1>
               <h2 id="cardType"></h2>
@@ -180,7 +166,7 @@ export default function Home() {
                     <span id="atk"></span>/<span id="def"></span>
                   </h2>
                 )}
-                <h4 className="p-4 border-2">
+                <h4 className={`p-4 border-2`}>
                   {isMonster(cardType) && (
                     <>
                       [<span id="race"></span>]
