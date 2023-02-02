@@ -45,7 +45,7 @@ export default function Home() {
             </label>
             <textarea
               id="cardJSON"
-              className="w-full h-64 px-4 py-2 rounded-md"
+              className="w-full h-64 px-4 py-2 text-white bg-gray-800 rounded-md opacity-90"
             />
             <button
               type="button"
@@ -100,16 +100,19 @@ export default function Home() {
           <br />
           <form className="space-y-4">
             <h2 className="text-3xl">Card Generator</h2>
-            <label htmlFor="cardID" className="block font-aldrich">
+            <label htmlFor="cardName" className="block font-aldrich">
               Name
             </label>
-            <input id="cardID" className="w-full px-4 py-2 rounded-md" />
+            <input
+              id="cardName"
+              className="w-full px-4 py-2 text-white bg-gray-800 rounded-md opacity-90"
+            />
             <button
               type="button"
               onClickCapture={async (e) => {
                 e.preventDefault();
                 const el = document.getElementById(
-                  "cardID"
+                  "cardName"
                 ) as HTMLInputElement;
                 const url =
                   "https://db.ygoprodeck.com/api/v7/cardinfo.php?name=" +
@@ -121,7 +124,7 @@ export default function Home() {
               onClick={async (e) => {
                 e.preventDefault();
                 const el = document.getElementById(
-                  "cardID"
+                  "cardName"
                 ) as HTMLInputElement;
                 const url =
                   "https://db.ygoprodeck.com/api/v7/cardinfo.php?name=" +
